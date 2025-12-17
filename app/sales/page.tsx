@@ -27,11 +27,13 @@ export default function SalesPage() {
   }, [])
 
   const filteredOrders = orders.filter((order) => {
+    if (!order) return false
+    
     const matchesSearch =
-      order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customerName.toLowerCase().includes(searchQuery.toLowerCase())
+      (order.orderNumber && order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (order.customerName && order.customerName.toLowerCase().includes(searchQuery.toLowerCase()))
 
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter
+    const matchesStatus = statusFilter === "all" || (order.status && order.status === statusFilter)
 
     return matchesSearch && matchesStatus
   })
