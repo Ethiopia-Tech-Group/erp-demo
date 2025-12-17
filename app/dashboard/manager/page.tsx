@@ -22,16 +22,16 @@ export default function ManagerDashboard() {
     setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
   }, [])
 
-  const totalRevenue = salesOrders.reduce((sum, order) => sum + order.total, 0)
-  const totalProfit = salesOrders.reduce((sum, order) => sum + order.profit, 0)
-  const pendingSales = salesOrders.filter((o) => o.status === "draft" || o.status === "approved").length
-  const lowStockProducts = products.filter((p) => p.currentStock <= p.reorderLevel).length
+  const totalRevenue = salesOrders.reduce((sum, order) => sum + (order?.total || 0), 0)
+  const totalProfit = salesOrders.reduce((sum, order) => sum + (order?.profit || 0), 0)
+  const pendingSales = salesOrders.filter((o) => o?.status && (o.status === "draft" || o.status === "approved")).length
+  const lowStockProducts = products.filter((p) => (p?.currentStock || 0) <= (p?.reorderLevel || 0)).length
 
   const statusData = [
-    { status: "Draft", count: salesOrders.filter((o) => o.status === "draft").length },
-    { status: "Approved", count: salesOrders.filter((o) => o.status === "approved").length },
-    { status: "Shipped", count: salesOrders.filter((o) => o.status === "shipped").length },
-    { status: "Completed", count: salesOrders.filter((o) => o.status === "completed").length },
+    { status: "Draft", count: salesOrders.filter((o) => o?.status === "draft").length },
+    { status: "Approved", count: salesOrders.filter((o) => o?.status === "approved").length },
+    { status: "Shipped", count: salesOrders.filter((o) => o?.status === "shipped").length },
+    { status: "Completed", count: salesOrders.filter((o) => o?.status === "completed").length },
   ]
 
   return (

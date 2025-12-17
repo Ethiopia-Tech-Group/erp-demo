@@ -20,11 +20,11 @@ export default function SalesDashboard() {
   useEffect(() => {
     const user = getCurrentUser()
     const allOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS)
-    setOrders(allOrders)
+    setOrders(allOrders || [])
 
     // Filter orders created by current user
-    if (user) {
-      setMyOrders(allOrders.filter((o) => o.createdBy === user.name))
+    if (user?.name) {
+      setMyOrders((allOrders || []).filter((o) => o?.createdBy === user.name))
     }
   }, [])
 

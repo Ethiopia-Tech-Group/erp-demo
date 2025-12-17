@@ -53,11 +53,11 @@ export default function AdminDashboard() {
 
   // Order status data
   const orderStatusData = [
-    { name: "Draft", value: salesOrders.filter((o) => o.status === "draft").length, color: "#94a3b8" },
-    { name: "Approved", value: salesOrders.filter((o) => o.status === "approved").length, color: "#3b82f6" },
-    { name: "Shipped", value: salesOrders.filter((o) => o.status === "shipped").length, color: "#f59e0b" },
-    { name: "Delivered", value: salesOrders.filter((o) => o.status === "delivered").length, color: "#8b5cf6" },
-    { name: "Completed", value: salesOrders.filter((o) => o.status === "completed").length, color: "#10b981" },
+    { name: "Draft", value: salesOrders.filter((o) => o?.status === "draft").length, color: "#94a3b8" },
+    { name: "Approved", value: salesOrders.filter((o) => o?.status === "approved").length, color: "#3b82f6" },
+    { name: "Shipped", value: salesOrders.filter((o) => o?.status === "shipped").length, color: "#f59e0b" },
+    { name: "Delivered", value: salesOrders.filter((o) => o?.status === "delivered").length, color: "#8b5cf6" },
+    { name: "Completed", value: salesOrders.filter((o) => o?.status === "completed").length, color: "#10b981" },
   ]
 
   return (

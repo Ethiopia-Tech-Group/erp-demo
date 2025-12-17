@@ -19,9 +19,9 @@ export default function WarehouseDashboard() {
     setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
   }, [])
 
-  const stockIn = movements.filter((m) => m.type === "in").reduce((sum, m) => sum + m.quantity, 0)
-  const stockOut = movements.filter((m) => m.type === "out").reduce((sum, m) => sum + m.quantity, 0)
-  const totalProducts = products.length
+  const stockIn = (movements || []).filter((m) => m?.type === "in").reduce((sum, m) => sum + (m?.quantity || 0), 0)
+  const stockOut = (movements || []).filter((m) => m?.type === "out").reduce((sum, m) => sum + (m?.quantity || 0), 0)
+  const totalProducts = (products || []).length
 
   return (
     <AuthGuard allowedRoles={["warehouse"]}>

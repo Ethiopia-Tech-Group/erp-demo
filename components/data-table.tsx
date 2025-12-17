@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 interface Column<T> {
   header: string
   accessor: keyof T | ((row: T) => React.ReactNode)
-  cell?: (value: any) => React.ReactNode
+  cell?: (value: unknown, row?: T) => React.ReactNode
 }
 
 interface DataTableProps<T> {
@@ -36,12 +36,25 @@ export function DataTable<T extends { id: string }>({
               </TableCell>
             </TableRow>
           ) : (
-            data.map((row) => (
-              <TableRow key={row.id}>
-                {columns.map((column, index) => {
-                  const value = typeof column.accessor === "function" ? column.accessor(row) : row[column.accessor]
-
-                  return <TableCell key={index}>{column.cell ? column.cell(value) : value}</TableCell>
+            (data || []).map((row, index) => (
+              <TableRow key={row?.id || `row-${index}`}>
+                {columns.map((column, colIndex) => {
+                  try {
+                    const value = typeof column.accessor === "function" 
+                      ? column.accessor(row) 
+                      : row && row[column.accessor] !== undefined 
+                        ? row[column.accessor] 
+                        : undefined
+                    
+                    return (
+                      <TableCell key={colIndex}>
+                        {column.cell ? column.cell(value, row) : (value !== undefined ? String(value) : "")}
+                      </TableCell>
+                    )
+                  } catch (error) {
+                    console.warn(`Error rendering cell at row ${index}, column ${colIndex}:`, error)
+                    return <TableCell key={colIndex}></TableCell>
+                  }
                 })}
               </TableRow>
             ))

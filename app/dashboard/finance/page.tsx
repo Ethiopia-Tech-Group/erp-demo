@@ -31,9 +31,9 @@ export default function FinanceDashboard() {
     setPurchaseOrders(getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
   }, [])
 
-  const totalRevenue = salesOrders.reduce((sum, order) => sum + order.total, 0)
-  const totalProfit = salesOrders.reduce((sum, order) => sum + order.profit, 0)
-  const totalCost = purchaseOrders.reduce((sum, order) => sum + order.total, 0)
+  const totalRevenue = (salesOrders || []).reduce((sum, order) => sum + (order?.total || 0), 0)
+  const totalProfit = (salesOrders || []).reduce((sum, order) => sum + (order?.profit || 0), 0)
+  const totalCost = (purchaseOrders || []).reduce((sum, order) => sum + (order?.total || 0), 0)
   const profitMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : "0.0"
 
   // Monthly profit data

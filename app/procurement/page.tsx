@@ -27,11 +27,13 @@ export default function ProcurementPage() {
   }, [])
 
   const filteredOrders = orders.filter((order) => {
+    if (!order) return false
+    
     const matchesSearch =
-      order.poNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.supplierName.toLowerCase().includes(searchQuery.toLowerCase())
+      (order.poNumber && order.poNumber.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (order.supplierName && order.supplierName.toLowerCase().includes(searchQuery.toLowerCase()))
 
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter
+    const matchesStatus = statusFilter === "all" || (order.status && order.status === statusFilter)
 
     return matchesSearch && matchesStatus
   })

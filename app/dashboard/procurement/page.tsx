@@ -21,9 +21,9 @@ export default function ProcurementDashboard() {
     setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
   }, [])
 
-  const totalSpend = purchaseOrders.reduce((sum, order) => sum + order.total, 0)
-  const pendingOrders = purchaseOrders.filter((o) => o.status === "draft" || o.status === "ordered").length
-  const lowStockProducts = products.filter((p) => p.currentStock <= p.reorderLevel).length
+  const totalSpend = purchaseOrders.reduce((sum, order) => sum + (order?.total || 0), 0)
+  const pendingOrders = purchaseOrders.filter((o) => o?.status && (o.status === "draft" || o.status === "ordered")).length
+  const lowStockProducts = products.filter((p) => (p?.currentStock || 0) <= (p?.reorderLevel || 0)).length
 
   return (
     <AuthGuard allowedRoles={["procurement"]}>
