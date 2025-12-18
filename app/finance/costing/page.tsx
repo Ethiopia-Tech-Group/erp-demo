@@ -8,6 +8,7 @@ import { DataTable } from "@/components/data-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Product } from "@/lib/types"
+import type { Column } from "@/lib/data-type"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -16,11 +17,11 @@ export default function CostingPage() {
   const router = useRouter()
   const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 
-  const columns = [
+  const columns: Column<Product>[] = [
     {
       header: "Product Code",
       accessor: "code" as keyof Product,
-      cell: (value: unknown) => <span className="font-medium">{String(value)}</span>,
+      cell: (value: unknown) => <span className="font-medium">{value ? String(value) : "N/A"}</span>,
     },
     {
       header: "Product Name",
@@ -33,19 +34,19 @@ export default function CostingPage() {
     {
       header: "Cost Price",
       accessor: "costPrice" as keyof Product,
-      cell: (value: unknown) => `$${Number(value).toLocaleString()}`,
+      cell: (value: unknown) => `$${Number(value || 0).toLocaleString()}`,
     },
     {
       header: "Sale Price",
       accessor: "salePrice" as keyof Product,
-      cell: (value: unknown) => `$${Number(value).toLocaleString()}`,
+      cell: (value: unknown) => `$${Number(value || 0).toLocaleString()}`,
     },
     {
       header: "Profit per Unit",
       accessor: "salePrice" as keyof Product,
       cell: (_value, row) => (
         row ? (
-          <span className="text-green-600 font-medium">${(row.salePrice - row.costPrice).toLocaleString()}</span>
+          <span className="text-green-600 font-medium">${((row.salePrice || 0) - (row.costPrice || 0)).toLocaleString()}</span>
         ) : null
       ),
     },
@@ -55,7 +56,7 @@ export default function CostingPage() {
       cell: (_value, row) => (
         row ? (
           <span className="font-medium">
-            {(((row.salePrice - row.costPrice) / row.salePrice) * 100).toFixed(1)}%
+            {row.salePrice === 0 ? "N/A" : (((row.salePrice - row.costPrice) / row.salePrice) * 100).toFixed(1)}%
           </span>
         ) : null
       ),
@@ -65,17 +66,19 @@ export default function CostingPage() {
       accessor: "currentStock" as keyof Product,
       cell: (_value, row) => (
         row ? (
-          <span className="font-medium">${(row.currentStock * row.costPrice).toLocaleString()}</span>
+          <span className="font-medium">${((row.currentStock || 0) * (row.costPrice || 0)).toLocaleString()}</span>
         ) : null
       ),
     },
   ]
 
-  const totalStockValue = products.reduce((sum, product) => sum + product.currentStock * product.costPrice, 0)
+  const totalStockValue = products.reduce((sum, product) => sum + (product.currentStock || 0) * (product.costPrice || 0), 0)
   const avgMargin =
     products.length > 0
-      ? products.reduce((sum, product) => sum + ((product.salePrice - product.costPrice) / product.salePrice) * 100, 0) /
-        products.length
+      ? products.reduce((sum, product) => {
+          if (!product.salePrice || product.salePrice === 0) return sum;
+          return sum + (((product.salePrice || 0) - (product.costPrice || 0)) / product.salePrice) * 100;
+        }, 0) / products.length
       : 0
 
   return (
