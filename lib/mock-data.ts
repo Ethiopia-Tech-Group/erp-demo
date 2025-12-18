@@ -186,6 +186,28 @@ export const mockProducts: Product[] = [
     currentStock: 200,
     reorderLevel: 50,
   },
+  {
+    id: "P009",
+    code: "COF-INS-001",
+    name: "Instant Ethiopian Coffee (500g Jar)",
+    category: "Instant Coffee",
+    unit: "Jar",
+    costPrice: 300,
+    salePrice: 600,
+    currentStock: 150,
+    reorderLevel: 30,
+  },
+  {
+    id: "P010",
+    code: "COF-EQP-001",
+    name: "Ethiopian Coffee Maker (Traditional Pot)",
+    category: "Coffee Equipment",
+    unit: "Piece",
+    costPrice: 150,
+    salePrice: 300,
+    currentStock: 80,
+    reorderLevel: 20,
+  },
 ]
 
 export const mockSuppliers: Supplier[] = [

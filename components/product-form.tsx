@@ -128,10 +128,11 @@ export function ProductForm({ onProductAdded }: ProductFormProps) {
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Textiles">Textiles</SelectItem>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Furniture">Furniture</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
+                  <SelectItem value="Coffee Green Beans">Coffee Green Beans</SelectItem>
+                  <SelectItem value="Roasted Coffee">Roasted Coffee</SelectItem>
+                  <SelectItem value="Coffee Accessories">Coffee Accessories</SelectItem>
+                  <SelectItem value="Instant Coffee">Instant Coffee</SelectItem>
+                  <SelectItem value="Coffee Equipment">Coffee Equipment</SelectItem>
                 </SelectContent>
               </Select>
             </div>
