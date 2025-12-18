@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -14,19 +14,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function SalesDashboard() {
-  const [orders, setOrders] = useState<SalesOrder[]>([])
-  const [myOrders, setMyOrders] = useState<SalesOrder[]>([])
-
-  useEffect(() => {
-    const user = getCurrentUser()
-    const allOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS)
-    setOrders(allOrders || [])
-
-    // Filter orders created by current user
-    if (user?.name) {
-      setMyOrders((allOrders || []).filter((o) => o?.createdBy === user.name))
-    }
-  }, [])
+  const user = getCurrentUser()
+  const allOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS) || []
+  
+  // Filter orders created by current user
+  const myOrders = user?.name 
+    ? allOrders.filter((o) => o?.createdBy === user.name)
+    : []
 
   const totalRevenue = myOrders.reduce((sum, order) => sum + order.total, 0)
   const totalProfit = myOrders.reduce((sum, order) => sum + order.profit, 0)

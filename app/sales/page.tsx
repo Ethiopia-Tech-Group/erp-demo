@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -14,17 +14,14 @@ import type { SalesOrder, OrderStatus } from "@/lib/types"
 import { Search, Plus, Eye } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
+import { Column } from "@/lib/data-type"
 
-export default function SalesPage() {
+export default function SalesOrdersPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const [orders, setOrders] = useState<SalesOrder[]>([])
+  const [orders, setOrders] = useState<SalesOrder[]>(() => getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
-
-  useEffect(() => {
-    setOrders(getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
-  }, [])
 
   const filteredOrders = orders.filter((order) => {
     if (!order) return false
@@ -84,11 +81,11 @@ export default function SalesPage() {
     )
   }
 
-  const columns = [
+ const columns: Column<SalesOrder>[] = [
     {
       header: "Order Number",
       accessor: "orderNumber" as keyof SalesOrder,
-      cell: (value: string) => <span className="font-medium">{value}</span>,
+      cell: (value): ReactNode => ( <span className="font-medium">{value as string}</span>),
     },
     {
       header: "Customer",
@@ -105,17 +102,18 @@ export default function SalesPage() {
     {
       header: "Total",
       accessor: "total" as keyof SalesOrder,
-      cell: (value: number) => `$${value.toLocaleString()}`,
+      cell: (value): ReactNode => ( `$${(value as number).toLocaleString()}`),
     },
     {
       header: "Profit",
       accessor: "profit" as keyof SalesOrder,
-      cell: (value: number) => <span className="text-green-600 font-medium">${value.toLocaleString()}</span>,
+      cell: (value): ReactNode => ( <span className="text-green-600 font-medium">${(value as number).toLocaleString()}</span>),
     },
     {
       header: "Status",
-      accessor: "status" as keyof SalesOrder,
-      cell: (_value: OrderStatus, row: SalesOrder) => <StatusCell order={row} />,
+      accessor: "status",
+      cell: (_value, row): ReactNode =>
+        row ? <StatusCell order={row} /> : null,
     },
     {
       header: "Actions",
@@ -125,7 +123,7 @@ export default function SalesPage() {
         </Button>
       )) as unknown as keyof SalesOrder,
     },
-  ] as any // Type assertion to bypass strict typing for this specific case
+  ] // Type assertion to bypass strict typing for this specific case
 
   return (
     <AuthGuard allowedRoles={["admin", "manager", "sales"]}>

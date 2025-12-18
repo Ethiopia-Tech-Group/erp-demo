@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -10,17 +10,13 @@ import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Supplier } from "@/lib/types"
 
 export default function SuppliersPage() {
-  const [suppliers, setSuppliers] = useState<Supplier[]>([])
-
-  useEffect(() => {
-    setSuppliers(getStorageData<Supplier>(STORAGE_KEYS.SUPPLIERS))
-  }, [])
+  const suppliers = getStorageData<Supplier>(STORAGE_KEYS.SUPPLIERS) || []
 
   const columns = [
     {
       header: "Supplier ID",
       accessor: "id" as keyof Supplier,
-      cell: (value: string) => <span className="font-medium">{value}</span>,
+      cell: (value: unknown) => <span className="font-medium">{String(value)}</span>,
     },
     {
       header: "Name",

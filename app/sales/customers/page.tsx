@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -10,17 +10,13 @@ import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Customer } from "@/lib/types"
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState<Customer[]>([])
-
-  useEffect(() => {
-    setCustomers(getStorageData<Customer>(STORAGE_KEYS.CUSTOMERS))
-  }, [])
+  const customers = getStorageData<Customer>(STORAGE_KEYS.CUSTOMERS) || []
 
   const columns = [
     {
       header: "Customer ID",
       accessor: "id" as keyof Customer,
-      cell: (value: string) => <span className="font-medium">{value}</span>,
+      cell: (value: unknown) => <span className="font-medium">{String(value)}</span>,
     },
     {
       header: "Name",
@@ -41,7 +37,7 @@ export default function CustomersPage() {
     {
       header: "Credit Limit",
       accessor: "creditLimit" as keyof Customer,
-      cell: (value: number) => `$${value.toLocaleString()}`,
+      cell: (value: unknown) => `$${Number(value).toLocaleString()}`,
     },
   ]
 

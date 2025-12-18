@@ -18,15 +18,11 @@ import { useToast } from "@/hooks/use-toast"
 export default function StockInPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
   const [selectedProduct, setSelectedProduct] = useState("")
   const [quantity, setQuantity] = useState("")
   const [reference, setReference] = useState("")
   const [notes, setNotes] = useState("")
-
-  useEffect(() => {
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
 
   const handleStockIn = () => {
     if (!selectedProduct || !quantity || Number(quantity) <= 0) {

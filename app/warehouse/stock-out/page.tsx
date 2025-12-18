@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -18,15 +18,11 @@ import { useToast } from "@/hooks/use-toast"
 export default function StockOutPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
   const [selectedProduct, setSelectedProduct] = useState("")
   const [quantity, setQuantity] = useState("")
   const [reference, setReference] = useState("")
   const [notes, setNotes] = useState("")
-
-  useEffect(() => {
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
 
   const handleStockOut = () => {
     if (!selectedProduct || !quantity || Number(quantity) <= 0) {

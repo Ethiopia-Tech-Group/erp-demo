@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -13,13 +13,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function ProcurementDashboard() {
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
-  const [products, setProducts] = useState<Product[]>([])
-
-  useEffect(() => {
-    setPurchaseOrders(getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
+  const purchaseOrders = getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS) || []
+  const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 
   const totalSpend = purchaseOrders.reduce((sum, order) => sum + (order?.total || 0), 0)
   const pendingOrders = purchaseOrders.filter((o) => o?.status && (o.status === "draft" || o.status === "ordered")).length

@@ -24,15 +24,9 @@ import {
 } from "recharts"
 
 export default function AdminDashboard() {
-  const [salesOrders, setSalesOrders] = useState<SalesOrder[]>([])
-  const [users, setUsers] = useState<User[]>([])
-  const [products, setProducts] = useState<Product[]>([])
-
-  useEffect(() => {
-    setSalesOrders(getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
-    setUsers(getStorageData<User>(STORAGE_KEYS.USERS))
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
+  const [salesOrders, setSalesOrders] = useState<SalesOrder[]>(() => getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
+  const [users, setUsers] = useState<User[]>(() => getStorageData<User>(STORAGE_KEYS.USERS))
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
 
   // Calculate KPIs
   const totalRevenue = salesOrders.reduce((sum, order) => sum + order.total, 0)

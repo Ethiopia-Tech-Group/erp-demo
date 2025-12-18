@@ -3,9 +3,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 interface Column<T> {
   header: string
-  accessor: keyof T | ((row: T) => React.ReactNode)
+  accessor: keyof T | ((row: T) => unknown)
   cell?: (value: unknown, row?: T) => React.ReactNode
 }
+
 
 interface DataTableProps<T> {
   data: T[]

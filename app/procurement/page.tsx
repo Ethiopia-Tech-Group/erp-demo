@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -14,17 +14,14 @@ import type { PurchaseOrder, PurchaseStatus } from "@/lib/types"
 import { Search, Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
+import { Column } from "@/lib/data-type"
 
 export default function ProcurementPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const [orders, setOrders] = useState<PurchaseOrder[]>([])
+  const [orders, setOrders] = useState<PurchaseOrder[]>(() => getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
-
-  useEffect(() => {
-    setOrders(getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
-  }, [])
 
   const filteredOrders = orders.filter((order) => {
     if (!order) return false
@@ -69,11 +66,11 @@ export default function ProcurementPage() {
     </Select>
   )
 
-  const columns = [
+  const columns: Column<PurchaseOrder>[] = [
     {
       header: "PO Number",
       accessor: "poNumber" as keyof PurchaseOrder,
-      cell: (value: string) => <span className="font-medium">{value}</span>,
+      cell: (value): ReactNode => ( <span className="font-medium">{value as string}</span>),
     },
     {
       header: "Supplier",
@@ -90,14 +87,15 @@ export default function ProcurementPage() {
     {
       header: "Total",
       accessor: "total" as keyof PurchaseOrder,
-      cell: (value: number) => `$${value.toLocaleString()}`,
+      cell: (value): ReactNode => ( `$${(value as number).toLocaleString()}`),
     },
     {
       header: "Status",
-      accessor: "status" as keyof PurchaseOrder,
-      cell: (value: PurchaseStatus, row: PurchaseOrder) => <StatusCell order={row} />,
+      accessor: "status",
+      cell: (_value, row): ReactNode =>
+        row ? <StatusCell order={row} /> : null,
     },
-  ] as any // Type assertion to bypass strict typing for this specific case
+  ]  // Type assertion to bypass strict typing for this specific case
 
   return (
     <AuthGuard allowedRoles={["admin", "manager", "procurement"]}>

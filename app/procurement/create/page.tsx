@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -18,24 +18,16 @@ import { useToast } from "@/hooks/use-toast"
 export default function CreatePurchaseOrderPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const [suppliers, setSuppliers] = useState<Supplier[]>([])
-  const [products, setProducts] = useState<Product[]>([])
+  const [suppliers, setSuppliers] = useState<Supplier[]>(() => getStorageData<Supplier>(STORAGE_KEYS.SUPPLIERS) || [])
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || [])
   const [selectedSupplier, setSelectedSupplier] = useState("")
-  const [orderDate, setOrderDate] = useState("")
-  const [expectedDate, setExpectedDate] = useState("")
+  const [orderDate, setOrderDate] = useState(() => new Date().toISOString().split("T")[0])
+  const [expectedDate, setExpectedDate] = useState(() => {
+    const date = new Date()
+    date.setDate(date.getDate() + 28)
+    return date.toISOString().split("T")[0]
+  })
   const [items, setItems] = useState<PurchaseItem[]>([])
-
-  useEffect(() => {
-    setSuppliers(getStorageData<Supplier>(STORAGE_KEYS.SUPPLIERS))
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-
-    const today = new Date().toISOString().split("T")[0]
-    setOrderDate(today)
-
-    const fourWeeks = new Date()
-    fourWeeks.setDate(fourWeeks.getDate() + 28)
-    setExpectedDate(fourWeeks.toISOString().split("T")[0])
-  }, [])
 
   const addItem = () => {
     setItems([
@@ -54,7 +46,7 @@ export default function CreatePurchaseOrderPage() {
     setItems(items.filter((_, i) => i !== index))
   }
 
-  const updateItem = (index: number, field: keyof PurchaseItem, value: any) => {
+  const updateItem = (index: number, field: keyof PurchaseItem, value: string | number) => {
     const updatedItems = [...items]
     const item = updatedItems[index]
 
@@ -67,10 +59,13 @@ export default function CreatePurchaseOrderPage() {
         item.total = item.quantity * product.costPrice
       }
     } else if (field === "quantity") {
-      item.quantity = Number(value)
-      item.total = item.quantity * item.unitPrice
-    } else {
-      item[field] = value
+      const quantity = Number(value)
+      item.quantity = quantity
+      item.total = quantity * item.unitPrice
+    } else if (field === "unitPrice") {
+      const unitPrice = Number(value)
+      item.unitPrice = unitPrice
+      item.total = item.quantity * unitPrice
     }
 
     setItems(updatedItems)

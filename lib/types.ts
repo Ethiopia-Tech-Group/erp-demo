@@ -90,6 +90,7 @@ export interface PurchaseItem {
   productName: string
   quantity: number
   unitPrice: number
+  costPrice?: number // Make costPrice optional for purchase items
   total: number
 }
 

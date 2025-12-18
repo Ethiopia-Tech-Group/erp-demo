@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -35,13 +35,8 @@ import {
 } from "recharts"
 
 export default function FinancePage() {
-  const [salesOrders, setSalesOrders] = useState<SalesOrder[]>([])
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
-
-  useEffect(() => {
-    setSalesOrders(getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
-    setPurchaseOrders(getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
-  }, [])
+  const salesOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS) || []
+  const purchaseOrders = getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS) || []
 
   const totalRevenue = salesOrders.reduce((sum, order) => sum + order.total, 0)
   const totalProfit = salesOrders.reduce((sum, order) => sum + order.profit, 0)

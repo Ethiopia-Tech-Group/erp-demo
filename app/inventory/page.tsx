@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -15,18 +15,15 @@ import type { Product } from "@/lib/types"
 import { Search, AlertTriangle, Plus } from "lucide-react"
 
 export default function InventoryPage() {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || [])
   const [searchQuery, setSearchQuery] = useState("")
   const [showForm, setShowForm] = useState(false)
   
   const user = getCurrentUser()
 
-  useEffect(() => {
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
-
   const loadProducts = () => {
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
+    const updatedProducts = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
+    setProducts(updatedProducts)
   }
 
   const filteredProducts = products.filter(
@@ -42,7 +39,7 @@ export default function InventoryPage() {
     {
       header: "Product Code",
       accessor: "code" as keyof Product,
-      cell: (value: string) => <span className="font-medium">{value}</span>,
+      cell: (value: unknown) => <span className="font-medium">{String(value)}</span>,
     },
     {
       header: "Product Name",
@@ -61,22 +58,22 @@ export default function InventoryPage() {
           </span>
           {product.currentStock <= product.reorderLevel && <AlertTriangle className="h-4 w-4 text-orange-600" />}
         </div>
-      )) as any,
+      )) as unknown as keyof Product,
     },
     {
       header: "Reorder Level",
       accessor: "reorderLevel" as keyof Product,
-      cell: (value: number) => `${value}`,
+      cell: (value: unknown) => `${Number(value)}`,
     },
     {
       header: "Cost Price",
       accessor: "costPrice" as keyof Product,
-      cell: (value: number) => `$${value}`,
+      cell: (value: unknown) => `$${Number(value)}`,
     },
     {
       header: "Sale Price",
       accessor: "salePrice" as keyof Product,
-      cell: (value: number) => `$${value}`,
+      cell: (value: unknown) => `$${Number(value)}`,
     },
   ]
 

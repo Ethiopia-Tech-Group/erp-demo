@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -24,10 +24,11 @@ import { useToast } from "@/hooks/use-toast"
 
 export default function UsersPage() {
   const { toast } = useToast()
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<User[]>(() => getStorageData<User>(STORAGE_KEYS.USERS) || [])
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,12 +37,9 @@ export default function UsersPage() {
     role: "sales" as User["role"],
   })
 
-  useEffect(() => {
-    loadUsers()
-  }, [])
-
   const loadUsers = () => {
-    setUsers(getStorageData<User>(STORAGE_KEYS.USERS))
+    const updatedUsers = getStorageData<User>(STORAGE_KEYS.USERS) || []
+    setUsers(updatedUsers)
   }
 
   const filteredUsers = users.filter(
@@ -136,24 +134,24 @@ export default function UsersPage() {
     {
       header: "Role",
       accessor: "role" as keyof User,
-      cell: (value: string) => (
+      cell: (value: unknown, _row?: User) => (
         <span className="px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary capitalize">
-          {value}
+          {String(value)}
         </span>
       ),
     },
     {
       header: "Status",
       accessor: "active" as keyof User,
-      cell: (value: boolean) => (
+      cell: (value: unknown, _row?: User) => (
         <span
           className={`px-2 py-1 text-xs font-medium rounded-full ${
-            value
+            Boolean(value)
               ? "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400"
               : "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
           }`}
         >
-          {value ? "Active" : "Inactive"}
+          {Boolean(value) ? "Active" : "Inactive"}
         </span>
       ),
     },
@@ -168,7 +166,7 @@ export default function UsersPage() {
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
         </div>
-      )) as any,
+      )) as unknown as keyof User,
     },
   ]
 

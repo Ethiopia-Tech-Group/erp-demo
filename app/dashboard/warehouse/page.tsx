@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -11,17 +11,12 @@ import type { StockMovement, Product } from "@/lib/types"
 import { Package, ArrowUp, ArrowDown, Warehouse } from "lucide-react"
 
 export default function WarehouseDashboard() {
-  const [movements, setMovements] = useState<StockMovement[]>([])
-  const [products, setProducts] = useState<Product[]>([])
+  const movements = getStorageData<StockMovement>(STORAGE_KEYS.STOCK_MOVEMENTS) || []
+  const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 
-  useEffect(() => {
-    setMovements(getStorageData<StockMovement>(STORAGE_KEYS.STOCK_MOVEMENTS))
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
-
-  const stockIn = (movements || []).filter((m) => m?.type === "in").reduce((sum, m) => sum + (m?.quantity || 0), 0)
-  const stockOut = (movements || []).filter((m) => m?.type === "out").reduce((sum, m) => sum + (m?.quantity || 0), 0)
-  const totalProducts = (products || []).length
+  const stockIn = movements.filter((m) => m?.type === "in").reduce((sum, m) => sum + (m?.quantity || 0), 0)
+  const stockOut = movements.filter((m) => m?.type === "out").reduce((sum, m) => sum + (m?.quantity || 0), 0)
+  const totalProducts = products.length
 
   return (
     <AuthGuard allowedRoles={["warehouse"]}>

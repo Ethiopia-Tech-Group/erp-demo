@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -12,15 +12,9 @@ import { DollarSign, ShoppingCart, TrendingUp, AlertTriangle } from "lucide-reac
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
 export default function ManagerDashboard() {
-  const [salesOrders, setSalesOrders] = useState<SalesOrder[]>([])
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
-  const [products, setProducts] = useState<Product[]>([])
-
-  useEffect(() => {
-    setSalesOrders(getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
-    setPurchaseOrders(getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
+  const [salesOrders, setSalesOrders] = useState<SalesOrder[]>(() => getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
 
   const totalRevenue = salesOrders.reduce((sum, order) => sum + (order?.total || 0), 0)
   const totalProfit = salesOrders.reduce((sum, order) => sum + (order?.profit || 0), 0)

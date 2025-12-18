@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -10,17 +10,13 @@ import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Product } from "@/lib/types"
 
 export default function CostingPage() {
-  const [products, setProducts] = useState<Product[]>([])
-
-  useEffect(() => {
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
+  const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 
   const columns = [
     {
       header: "Product Code",
       accessor: "code" as keyof Product,
-      cell: (value: string) => <span className="font-medium">{value}</span>,
+      cell: (value: unknown) => <span className="font-medium">{String(value)}</span>,
     },
     {
       header: "Product Name",
@@ -33,18 +29,18 @@ export default function CostingPage() {
     {
       header: "Cost Price",
       accessor: "costPrice" as keyof Product,
-      cell: (value: number) => `$${value.toLocaleString()}`,
+      cell: (value: unknown) => `$${Number(value).toLocaleString()}`,
     },
     {
       header: "Sale Price",
       accessor: "salePrice" as keyof Product,
-      cell: (value: number) => `$${value.toLocaleString()}`,
+      cell: (value: unknown) => `$${Number(value).toLocaleString()}`,
     },
     {
       header: "Profit per Unit",
       accessor: ((product: Product) => (
         <span className="text-green-600 font-medium">${(product.salePrice - product.costPrice).toLocaleString()}</span>
-      )) as any,
+      )) as unknown as keyof Product,
     },
     {
       header: "Margin %",
@@ -52,20 +48,22 @@ export default function CostingPage() {
         <span className="font-medium">
           {(((product.salePrice - product.costPrice) / product.salePrice) * 100).toFixed(1)}%
         </span>
-      )) as any,
+      )) as unknown as keyof Product,
     },
     {
       header: "Stock Value",
       accessor: ((product: Product) => (
         <span className="font-medium">${(product.currentStock * product.costPrice).toLocaleString()}</span>
-      )) as any,
+      )) as unknown as keyof Product,
     },
   ]
 
   const totalStockValue = products.reduce((sum, product) => sum + product.currentStock * product.costPrice, 0)
   const avgMargin =
-    products.reduce((sum, product) => sum + ((product.salePrice - product.costPrice) / product.salePrice) * 100, 0) /
-    products.length
+    products.length > 0
+      ? products.reduce((sum, product) => sum + ((product.salePrice - product.costPrice) / product.salePrice) * 100, 0) /
+        products.length
+      : 0
 
   return (
     <AuthGuard allowedRoles={["finance"]}>

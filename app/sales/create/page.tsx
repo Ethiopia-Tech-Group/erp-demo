@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -18,11 +18,15 @@ import { useToast } from "@/hooks/use-toast"
 export default function CreateSalesOrderPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const [customers, setCustomers] = useState<Customer[]>([])
-  const [products, setProducts] = useState<Product[]>([])
+  const [customers, setCustomers] = useState<Customer[]>(() => getStorageData<Customer>(STORAGE_KEYS.CUSTOMERS) || [])
+  const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || [])
   const [selectedCustomer, setSelectedCustomer] = useState("")
-  const [orderDate, setOrderDate] = useState(new Date().toISOString().split("T")[0])
-  const [deliveryDate, setDeliveryDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0])
+  const [orderDate, setOrderDate] = useState(() => new Date().toISOString().split("T")[0])
+  const [deliveryDate, setDeliveryDate] = useState(() => {
+    const date = new Date()
+    date.setDate(date.getDate() + 7)
+    return date.toISOString().split("T")[0]
+  })
   const [items, setItems] = useState<OrderItem[]>([
     {
       productId: "",
@@ -33,11 +37,6 @@ export default function CreateSalesOrderPage() {
       total: 0,
     },
   ])
-
-  useEffect(() => {
-    setCustomers(getStorageData<Customer>(STORAGE_KEYS.CUSTOMERS))
-    setProducts(getStorageData<Product>(STORAGE_KEYS.PRODUCTS))
-  }, [])
 
   const handleAddItem = () => {
     setItems([

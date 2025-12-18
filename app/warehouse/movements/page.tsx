@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Sidebar } from "@/components/sidebar"
 import { Topbar } from "@/components/topbar"
@@ -11,13 +11,9 @@ import type { StockMovement } from "@/lib/types"
 import { ArrowUp, ArrowDown } from "lucide-react"
 
 export default function StockMovementsPage() {
-  const [movements, setMovements] = useState<StockMovement[]>([])
-
-  useEffect(() => {
-    const allMovements = getStorageData<StockMovement>(STORAGE_KEYS.STOCK_MOVEMENTS)
-    // Sort by date descending
-    setMovements(allMovements.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()))
-  }, [])
+  const allMovements = getStorageData<StockMovement>(STORAGE_KEYS.STOCK_MOVEMENTS) || []
+  // Sort by date descending
+  const movements = allMovements.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   const columns = [
     {
@@ -35,7 +31,7 @@ export default function StockMovementsPage() {
           )}
           <span className="capitalize font-medium">{movement.type}</span>
         </div>
-      )) as any,
+      )) as unknown as keyof StockMovement,
     },
     {
       header: "Product",
@@ -44,7 +40,7 @@ export default function StockMovementsPage() {
     {
       header: "Quantity",
       accessor: "quantity" as keyof StockMovement,
-      cell: (value: number) => <span className="font-medium">{value}</span>,
+      cell: (value: unknown) => <span className="font-medium">{Number(value)}</span>,
     },
     {
       header: "Reference",
@@ -57,7 +53,7 @@ export default function StockMovementsPage() {
     {
       header: "Notes",
       accessor: "notes" as keyof StockMovement,
-      cell: (value: string) => <span className="text-sm text-muted-foreground">{value || "-"}</span>,
+      cell: (value: unknown) => <span className="text-sm text-muted-foreground">{String(value) || "-"}</span>,
     },
   ]
 
