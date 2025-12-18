@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getStorageData, setStorageData, STORAGE_KEYS } from "@/lib/storage"
 import { getCurrentUser } from "@/lib/auth"
 import type { Product, StockMovement } from "@/lib/types"
-import { ShoppingCart } from "lucide-react"
+import { ArrowLeft, ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 
@@ -92,6 +92,9 @@ export default function StockOutPage() {
           <main className="flex-1 overflow-y-auto bg-muted/30 p-6">
             <div className="max-w-3xl mx-auto space-y-6">
               <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
                 <div className="h-12 w-12 rounded-full bg-orange-100 dark:bg-orange-950 flex items-center justify-center">
                   <ShoppingCart className="h-6 w-6 text-orange-600" />
                 </div>

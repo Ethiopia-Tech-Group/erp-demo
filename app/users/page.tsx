@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { getStorageData, setStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { User } from "@/lib/types"
-import { UserPlus, Search, Edit, Trash2 } from "lucide-react"
+import { UserPlus, Search, Edit, Trash2, ArrowLeft } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -21,9 +21,11 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 export default function UsersPage() {
   const { toast } = useToast()
+  const router = useRouter()
   const [users, setUsers] = useState<User[]>(() => getStorageData<User>(STORAGE_KEYS.USERS) || [])
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -157,16 +159,19 @@ export default function UsersPage() {
     },
     {
       header: "Actions",
-      accessor: ((user: User) => (
-        <div className="flex gap-2">
-          <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)}>
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => handleDeleteUser(user.id)}>
-            <Trash2 className="h-4 w-4 text-destructive" />
-          </Button>
-        </div>
-      )) as unknown as keyof User,
+      accessor: "id" as keyof User,
+      cell: (_value, row) => (
+        row ? (
+          <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={() => handleEditUser(row)}>
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => handleDeleteUser(row.id)}>
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
+          </div>
+        ) : null
+      ),
     },
   ]
 

@@ -8,7 +8,7 @@ import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { SalesOrder, PurchaseOrder } from "@/lib/types"
-import { DollarSign, TrendingUp, ShoppingCart, Package } from "lucide-react"
+import { DollarSign, TrendingUp, ShoppingCart, Package, ArrowLeft } from "lucide-react"
 import {
   BarChart,
   Bar,
@@ -21,8 +21,11 @@ import {
   Line,
   Legend,
 } from "recharts"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export default function FinanceDashboard() {
+  const router = useRouter()
   const salesOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS) || []
   const purchaseOrders = getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS) || []
 
@@ -51,7 +54,7 @@ export default function FinanceDashboard() {
   ]
 
   return (
-    <AuthGuard allowedRoles={["finance"]}>
+    <AuthGuard allowedRoles={["admin", "manager", "finance"]}>
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">

@@ -8,8 +8,12 @@ import { DataTable } from "@/components/data-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Product } from "@/lib/types"
+import { useRouter } from "next/navigation"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function CostingPage() {
+  const router = useRouter()
   const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 
   const columns = [
@@ -38,23 +42,32 @@ export default function CostingPage() {
     },
     {
       header: "Profit per Unit",
-      accessor: ((product: Product) => (
-        <span className="text-green-600 font-medium">${(product.salePrice - product.costPrice).toLocaleString()}</span>
-      )) as unknown as keyof Product,
+      accessor: "salePrice" as keyof Product,
+      cell: (_value, row) => (
+        row ? (
+          <span className="text-green-600 font-medium">${(row.salePrice - row.costPrice).toLocaleString()}</span>
+        ) : null
+      ),
     },
     {
       header: "Margin %",
-      accessor: ((product: Product) => (
-        <span className="font-medium">
-          {(((product.salePrice - product.costPrice) / product.salePrice) * 100).toFixed(1)}%
-        </span>
-      )) as unknown as keyof Product,
+      accessor: "salePrice" as keyof Product,
+      cell: (_value, row) => (
+        row ? (
+          <span className="font-medium">
+            {(((row.salePrice - row.costPrice) / row.salePrice) * 100).toFixed(1)}%
+          </span>
+        ) : null
+      ),
     },
     {
       header: "Stock Value",
-      accessor: ((product: Product) => (
-        <span className="font-medium">${(product.currentStock * product.costPrice).toLocaleString()}</span>
-      )) as unknown as keyof Product,
+      accessor: "currentStock" as keyof Product,
+      cell: (_value, row) => (
+        row ? (
+          <span className="font-medium">${(row.currentStock * row.costPrice).toLocaleString()}</span>
+        ) : null
+      ),
     },
   ]
 
@@ -66,16 +79,21 @@ export default function CostingPage() {
       : 0
 
   return (
-    <AuthGuard allowedRoles={["finance"]}>
+    <AuthGuard allowedRoles={["admin", "manager", "finance"]}>
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
           <Topbar />
           <main className="flex-1 overflow-y-auto bg-muted/30 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold">Product Costing</h1>
-                <p className="text-muted-foreground mt-1">Cost analysis and pricing breakdown by product</p>
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-3xl font-bold">Product Costing</h1>
+                  <p className="text-muted-foreground mt-1">Cost analysis and pricing breakdown by product</p>
+                </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">

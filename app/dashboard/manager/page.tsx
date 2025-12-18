@@ -8,10 +8,13 @@ import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { SalesOrder, PurchaseOrder, Product } from "@/lib/types"
-import { DollarSign, ShoppingCart, TrendingUp, AlertTriangle } from "lucide-react"
+import { DollarSign, ShoppingCart, TrendingUp, AlertTriangle, ArrowLeft } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export default function ManagerDashboard() {
+  const router = useRouter()
   const [salesOrders, setSalesOrders] = useState<SalesOrder[]>(() => getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS))
   const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS))

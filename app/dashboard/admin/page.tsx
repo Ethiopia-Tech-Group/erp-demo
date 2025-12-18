@@ -8,7 +8,7 @@ import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { SalesOrder, User, Product } from "@/lib/types"
-import { DollarSign, ShoppingCart, Package, TrendingUp, Users } from "lucide-react"
+import { DollarSign, ShoppingCart, Package, TrendingUp, Users, ArrowLeft } from "lucide-react"
 import {
   BarChart,
   Bar,
@@ -22,8 +22,11 @@ import {
   Cell,
   Legend,
 } from "recharts"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [salesOrders, setSalesOrders] = useState<SalesOrder[]>(() => getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS))
   const [users, setUsers] = useState<User[]>(() => getStorageData<User>(STORAGE_KEYS.USERS))
   const [products, setProducts] = useState<Product[]>(() => getStorageData<Product>(STORAGE_KEYS.PRODUCTS))

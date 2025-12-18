@@ -8,8 +8,12 @@ import { DataTable } from "@/components/data-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Supplier } from "@/lib/types"
+import { useRouter } from "next/navigation"
+import { ArrowLeft, Users } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function SuppliersPage() {
+  const router = useRouter()
   const suppliers = getStorageData<Supplier>(STORAGE_KEYS.SUPPLIERS) || []
 
   const columns = [
@@ -48,9 +52,14 @@ export default function SuppliersPage() {
           <Topbar />
           <main className="flex-1 overflow-y-auto bg-muted/30 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold">Suppliers</h1>
-                <p className="text-muted-foreground mt-1">View all suppliers and their information</p>
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-3xl font-bold">Suppliers</h1>
+                  <p className="text-muted-foreground mt-1">View all suppliers and their information</p>
+                </div>
               </div>
 
               <Card>

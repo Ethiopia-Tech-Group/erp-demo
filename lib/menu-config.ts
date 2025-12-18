@@ -49,8 +49,9 @@ export const menuConfig: Record<UserRole, MenuItem[]> = {
   ],
   finance: [
     { label: "Dashboard", href: "/dashboard/finance", icon: LayoutDashboard },
+    { label: "Overview", href: "/finance", icon: DollarSign },
     { label: "Profit Analysis", href: "/finance/profit", icon: DollarSign },
     { label: "Cost Reports", href: "/finance/costing", icon: FileText },
-    { label: "Sales Reports", href: "/finance/sales", icon: ShoppingCart },
+    { label: "Reports", href: "/reports", icon: FileText },
   ],
 }

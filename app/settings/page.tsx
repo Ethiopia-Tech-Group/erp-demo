@@ -18,10 +18,13 @@ import {
   Shield, 
   Database, 
   Save, 
-  RotateCcw 
+  RotateCcw,
+  ArrowLeft
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function SettingsPage() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState("general")
   
   // General settings
@@ -69,9 +72,14 @@ export default function SettingsPage() {
           <Topbar />
           <main className="flex-1 overflow-y-auto bg-muted/30 p-6">
             <div className="max-w-4xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold">Settings</h1>
-                <p className="text-muted-foreground mt-1">Manage your system preferences and configurations</p>
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-3xl font-bold">Settings</h1>
+                  <p className="text-muted-foreground mt-1">Manage your system preferences and configurations</p>
+                </div>
               </div>
 
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

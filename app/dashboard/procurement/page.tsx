@@ -8,11 +8,13 @@ import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { PurchaseOrder, Product } from "@/lib/types"
-import { DollarSign, Package, TrendingDown, AlertTriangle } from "lucide-react"
+import { DollarSign, Package, TrendingDown, AlertTriangle, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function ProcurementDashboard() {
+  const router = useRouter()
   const purchaseOrders = getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS) || []
   const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 

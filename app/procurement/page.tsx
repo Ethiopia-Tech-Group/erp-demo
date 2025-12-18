@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getStorageData, setStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { PurchaseOrder, PurchaseStatus } from "@/lib/types"
-import { Search, Plus } from "lucide-react"
+import { Search, Plus, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { Column } from "@/lib/data-type"
@@ -94,6 +94,17 @@ export default function ProcurementPage() {
       accessor: "status",
       cell: (_value, row): ReactNode =>
         row ? <StatusCell order={row} /> : null,
+    },
+    {
+      header: "Actions",
+      accessor: "id" as keyof PurchaseOrder,
+      cell: (_value, row) => (
+        row ? (
+          <Button variant="ghost" size="icon" onClick={() => router.push(`/procurement/${row.id}`)}>
+            <Search className="h-4 w-4" />
+          </Button>
+        ) : null
+      ),
     },
   ]  // Type assertion to bypass strict typing for this specific case
 

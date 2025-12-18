@@ -117,11 +117,14 @@ export default function SalesOrdersPage() {
     },
     {
       header: "Actions",
-      accessor: ((order: SalesOrder) => (
-        <Button variant="ghost" size="icon">
-          <Eye className="h-4 w-4" />
-        </Button>
-      )) as unknown as keyof SalesOrder,
+      accessor: "id" as keyof SalesOrder,
+      cell: (_value, row) => (
+        row ? (
+          <Button variant="ghost" size="icon" onClick={() => router.push(`/sales/${row.id}`)}>
+            <Eye className="h-4 w-4" />
+          </Button>
+        ) : null
+      ),
     },
   ] // Type assertion to bypass strict typing for this specific case
 

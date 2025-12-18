@@ -21,9 +21,11 @@ import {
   Pie,
   Cell
 } from "recharts"
-import { FileText, Download, Calendar, Filter } from "lucide-react"
+import { FileText, Download, Calendar, Filter, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function ReportsPage() {
+  const router = useRouter()
   const [dateRange, setDateRange] = useState("monthly")
   const [reportType, setReportType] = useState("sales")
 
@@ -52,7 +54,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <AuthGuard allowedRoles={["admin", "manager"]}>
+    <AuthGuard allowedRoles={["admin", "manager", "finance"]}>
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">

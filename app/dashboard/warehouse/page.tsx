@@ -8,9 +8,12 @@ import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { StockMovement, Product } from "@/lib/types"
-import { Package, ArrowUp, ArrowDown, Warehouse } from "lucide-react"
+import { Package, ArrowUp, ArrowDown, Warehouse, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export default function WarehouseDashboard() {
+  const router = useRouter()
   const movements = getStorageData<StockMovement>(STORAGE_KEYS.STOCK_MOVEMENTS) || []
   const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 

@@ -9,9 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { SalesOrder } from "@/lib/types"
 import type { Column } from "@/lib/data-type"
+import { useRouter } from "next/navigation"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 
 export default function ProfitAnalysisPage() {
+  const router = useRouter()
   const orders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS) || []
 
 
@@ -87,16 +91,21 @@ export default function ProfitAnalysisPage() {
   const avgMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : "0.0"
 
   return (
-    <AuthGuard allowedRoles={["finance"]}>
+    <AuthGuard allowedRoles={["admin", "manager", "finance"]}>
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
           <Topbar />
           <main className="flex-1 overflow-y-auto bg-muted/30 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold">Profit Analysis</h1>
-                <p className="text-muted-foreground mt-1">Detailed profitability breakdown by order</p>
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-3xl font-bold">Profit Analysis</h1>
+                  <p className="text-muted-foreground mt-1">Detailed profitability breakdown by order</p>
+                </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">

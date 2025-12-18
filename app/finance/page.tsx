@@ -14,7 +14,8 @@ import {
   FileText, 
   BarChart,
   PieChart,
-  LineChart
+  LineChart,
+  ArrowLeft
 } from "lucide-react"
 import Link from "next/link"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
@@ -33,8 +34,10 @@ import {
   Pie,
   Cell
 } from "recharts"
+import { useRouter } from "next/navigation"
 
 export default function FinancePage() {
+  const router = useRouter()
   const salesOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS) || []
   const purchaseOrders = getStorageData<PurchaseOrder>(STORAGE_KEYS.PURCHASE_ORDERS) || []
 

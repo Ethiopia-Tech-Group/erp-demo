@@ -8,9 +8,12 @@ import { DataTable } from "@/components/data-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { StockMovement } from "@/lib/types"
-import { ArrowUp, ArrowDown } from "lucide-react"
+import { ArrowUp, ArrowDown, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export default function StockMovementsPage() {
+  const router = useRouter()
   const allMovements = getStorageData<StockMovement>(STORAGE_KEYS.STOCK_MOVEMENTS) || []
   // Sort by date descending
   const movements = allMovements.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -22,16 +25,19 @@ export default function StockMovementsPage() {
     },
     {
       header: "Type",
-      accessor: ((movement: StockMovement) => (
-        <div className="flex items-center gap-2">
-          {movement.type === "in" ? (
-            <ArrowUp className="h-4 w-4 text-green-600" />
-          ) : (
-            <ArrowDown className="h-4 w-4 text-orange-600" />
-          )}
-          <span className="capitalize font-medium">{movement.type}</span>
-        </div>
-      )) as unknown as keyof StockMovement,
+      accessor: "type" as keyof StockMovement,
+      cell: (_value, row) => (
+        row ? (
+          <div className="flex items-center gap-2">
+            {row.type === "in" ? (
+              <ArrowUp className="h-4 w-4 text-green-600" />
+            ) : (
+              <ArrowDown className="h-4 w-4 text-orange-600" />
+            )}
+            <span className="capitalize font-medium">{row.type}</span>
+          </div>
+        ) : null
+      ),
     },
     {
       header: "Product",
@@ -65,9 +71,14 @@ export default function StockMovementsPage() {
           <Topbar />
           <main className="flex-1 overflow-y-auto bg-muted/30 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold">Stock Movements</h1>
-                <p className="text-muted-foreground mt-1">View all inventory transactions and movement history</p>
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-3xl font-bold">Stock Movements</h1>
+                  <p className="text-muted-foreground mt-1">View all inventory transactions and movement history</p>
+                </div>
               </div>
 
               <Card>

@@ -9,11 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import { getCurrentUser } from "@/lib/auth"
 import type { SalesOrder } from "@/lib/types"
-import { DollarSign, ShoppingCart, TrendingUp, Clock } from "lucide-react"
+import { DollarSign, ShoppingCart, TrendingUp, Clock, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function SalesDashboard() {
+  const router = useRouter()
   const user = getCurrentUser()
   const allOrders = getStorageData<SalesOrder>(STORAGE_KEYS.SALES_ORDERS) || []
   
