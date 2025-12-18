@@ -26,7 +26,7 @@ export default function StockMovementsPage() {
     {
       header: "Type",
       accessor: "type" as keyof StockMovement,
-      cell: (_value, row) => (
+      cell: (_value: unknown, row: StockMovement | undefined) => (
         row ? (
           <div className="flex items-center gap-2">
             {row.type === "in" ? (

@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getStorageData, setStorageData, STORAGE_KEYS } from "@/lib/storage"
 import { getCurrentUser } from "@/lib/auth"
 import type { Customer, Product, SalesOrder, OrderItem } from "@/lib/types"
-import { Plus, X, ShoppingCart } from "lucide-react"
+import { ArrowLeft, Plus, X, ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 

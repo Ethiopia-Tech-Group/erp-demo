@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Specify the turbopack root to fix workspace detection issue
+  turbopack: {
+    root: ".",
+  },
 };
 
 export default nextConfig;

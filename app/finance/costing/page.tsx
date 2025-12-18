@@ -8,7 +8,6 @@ import { DataTable } from "@/components/data-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getStorageData, STORAGE_KEYS } from "@/lib/storage"
 import type { Product } from "@/lib/types"
-import type { Column } from "@/lib/data-type"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -17,7 +16,7 @@ export default function CostingPage() {
   const router = useRouter()
   const products = getStorageData<Product>(STORAGE_KEYS.PRODUCTS) || []
 
-  const columns: Column<Product>[] = [
+  const columns = [
     {
       header: "Product Code",
       accessor: "code" as keyof Product,
@@ -44,7 +43,7 @@ export default function CostingPage() {
     {
       header: "Profit per Unit",
       accessor: "salePrice" as keyof Product,
-      cell: (_value, row) => (
+      cell: (_value: unknown, row: Product | undefined) => (
         row ? (
           <span className="text-green-600 font-medium">${((row.salePrice || 0) - (row.costPrice || 0)).toLocaleString()}</span>
         ) : null
@@ -53,7 +52,7 @@ export default function CostingPage() {
     {
       header: "Margin %",
       accessor: "salePrice" as keyof Product,
-      cell: (_value, row) => (
+      cell: (_value: unknown, row: Product | undefined) => (
         row ? (
           <span className="font-medium">
             {row.salePrice === 0 ? "N/A" : (((row.salePrice - row.costPrice) / row.salePrice) * 100).toFixed(1)}%
@@ -64,7 +63,7 @@ export default function CostingPage() {
     {
       header: "Stock Value",
       accessor: "currentStock" as keyof Product,
-      cell: (_value, row) => (
+      cell: (_value: unknown, row: Product | undefined) => (
         row ? (
           <span className="font-medium">${((row.currentStock || 0) * (row.costPrice || 0)).toLocaleString()}</span>
         ) : null

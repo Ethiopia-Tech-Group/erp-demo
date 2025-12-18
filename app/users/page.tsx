@@ -160,7 +160,7 @@ export default function UsersPage() {
     {
       header: "Actions",
       accessor: "id" as keyof User,
-      cell: (_value, row) => (
+      cell: (_value: unknown, row: User | undefined) => (
         row ? (
           <div className="flex gap-2">
             <Button variant="ghost" size="icon" onClick={() => handleEditUser(row)}>
